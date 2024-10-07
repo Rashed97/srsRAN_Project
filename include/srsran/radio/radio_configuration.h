@@ -43,7 +43,9 @@ struct clock_sources {
     /// Use external source.
     EXTERNAL,
     /// Use GPSDO.
-    GPSDO
+    GPSDO,
+    // FIXME: Add an unsupported option to skip this on radios that do not behave properly
+    UNSUPPORTED
   };
 
   /// Synchronization source selection.
@@ -151,6 +153,9 @@ inline clock_sources::source to_clock_source(const std::string& str)
   }
   if (str == "default") {
     return clock_sources::source::DEFAULT;
+  }
+  if (str == "unsupported") {
+    return clock_sources::source::UNSUPPORTED;
   }
   report_error("Invalid clock/sync source '{}'.", str);
 }

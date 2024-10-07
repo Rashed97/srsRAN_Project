@@ -255,6 +255,9 @@ public:
       case radio_configuration::clock_sources::source::GPSDO:
         clock_src = "gpsdo";
         break;
+      case radio_configuration::clock_sources::source::UNSUPPORTED:
+        clock_src = "unsupported";
+        break;
     }
 
     // Convert sync source to string.
@@ -270,6 +273,15 @@ public:
       case radio_configuration::clock_sources::source::GPSDO:
         sync_src = "gpsdo";
         break;
+      case radio_configuration::clock_sources::source::UNSUPPORTED:
+        sync_src = "unsupported";
+        break;
+    }
+
+    // FIXME: exit early if clock source configuration is not supported on this radio
+    if (clock_src == "unsupported" || sync_src == "unsupported") {
+      logger.warning("Skipping clock and sync source setting");
+      return true;
     }
 
     logger.debug("Setting PPS source to '{}' and clock source to '{}'.", sync_src, clock_src);
