@@ -242,6 +242,7 @@ public:
   }
   bool set_sync_source(const radio_configuration::clock_sources& config)
   {
+#if 0
     // Convert clock source to string.
     std::string clock_src;
     switch (config.clock) {
@@ -291,6 +292,9 @@ public:
     });
 #else
     return safe_execution([this, &sync_source, &clock_source]() { usrp->set_sync_source(clock_source, sync_source); });
+#endif
+#else
+    return true;
 #endif
   }
   bool set_rx_rate(double& actual_rate, double rate)
