@@ -42,6 +42,8 @@ struct formatter<srsran::radio_configuration::clock_sources::source> {
       -> decltype(std::declval<FormatContext>().out())
   {
     switch (source) {
+      case srsran::radio_configuration::clock_sources::source::UNSUPPORTED:
+        return fmt::format_to(ctx.out(), "unsupported");
       case srsran::radio_configuration::clock_sources::source::DEFAULT:
         return fmt::format_to(ctx.out(), "default");
       case srsran::radio_configuration::clock_sources::source::INTERNAL:

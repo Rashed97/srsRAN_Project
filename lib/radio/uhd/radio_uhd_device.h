@@ -242,7 +242,6 @@ public:
   }
   bool set_sync_source(const radio_configuration::clock_sources& config)
   {
-#if 0
     // Convert clock source to string.
     std::string clock_src;
     switch (config.clock) {
@@ -255,6 +254,9 @@ public:
         break;
       case radio_configuration::clock_sources::source::GPSDO:
         clock_src = "gpsdo";
+        break;
+      case radio_configuration::clock_sources::source::UNSUPPORTED:
+        clock_src = "unsupported";
         break;
     }
 
@@ -271,6 +273,15 @@ public:
       case radio_configuration::clock_sources::source::GPSDO:
         sync_src = "gpsdo";
         break;
+      case radio_configuration::clock_sources::source::UNSUPPORTED:
+        sync_src = "unsupported";
+        break;
+    }
+
+    // FIXME: exit early if clock source configuration is not supported on this radio
+    if (clock_src == "unsupported" || sync_src == "unsupported") {
+      logger.warning("Skipping clock and sync source setting");
+      return true;
     }
 
     logger.debug("Setting PPS source to '{}' and clock source to '{}'.", sync_src, clock_src);
@@ -292,9 +303,6 @@ public:
     });
 #else
     return safe_execution([this, &sync_source, &clock_source]() { usrp->set_sync_source(clock_source, sync_source); });
-#endif
-#else
-    return true;
 #endif
   }
   bool set_rx_rate(double& actual_rate, double rate)
